@@ -4,15 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Boussole Éco — ton radar économique</title>
-
-<!-- PWA -->
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#0a0e17" />
 <link rel="apple-touch-icon" href="icon-192.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Boussole" />
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
@@ -24,42 +21,20 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--txt);font-family:"DM Sans",sans-serif}
-  body{
-    background:
-      radial-gradient(900px 500px at 80% -10%, rgba(245,196,81,.10), transparent 60%),
-      radial-gradient(700px 500px at -10% 10%, rgba(46,201,138,.06), transparent 55%),
-      var(--bg);
-    min-height:100vh;padding:0 0 60px;-webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:720px;margin:0 auto;padding:22px 16px}
-  header{padding-top:max(22px,env(safe-area-inset-top))}
+  body{background:radial-gradient(900px 500px at 80% -10%, rgba(245,196,81,.10), transparent 60%),radial-gradient(700px 500px at -10% 10%, rgba(46,201,138,.06), transparent 55%),var(--bg);min-height:100vh;padding:0 0 60px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px}
+  header{padding-top:max(18px,env(safe-area-inset-top))}
   .brand{display:flex;align-items:center;gap:12px}
-  .logo{
-    width:46px;height:46px;border-radius:14px;flex:0 0 auto;
-    background:linear-gradient(145deg,var(--gold),var(--gold-soft));
-    display:grid;place-items:center;color:#1a1304;font-size:24px;
-    box-shadow:0 8px 24px rgba(245,196,81,.28);
-  }
+  .logo{width:46px;height:46px;border-radius:14px;flex:0 0 auto;background:linear-gradient(145deg,var(--gold),var(--gold-soft));display:grid;place-items:center;color:#1a1304;font-size:24px;box-shadow:0 8px 24px rgba(245,196,81,.28)}
   .brand h1{font-family:"Sora";font-weight:800;font-size:23px;letter-spacing:-.3px;line-height:1}
   .brand p{color:var(--muted);font-size:13.5px;margin-top:4px}
-  .toprow{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-  .today{
-    display:inline-flex;align-items:center;gap:8px;background:var(--panel);
-    border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--muted);
-  }
+  .toprow{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .today{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--muted)}
   .today b{color:var(--gold);text-transform:capitalize}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--bull);box-shadow:0 0 0 4px rgba(46,201,138,.18)}
-  #installBtn{
-    display:none;align-items:center;gap:7px;cursor:pointer;border:none;
-    font-family:"DM Sans";font-weight:700;font-size:13.5px;color:#1a1304;
-    background:linear-gradient(145deg,var(--gold),var(--gold-soft));
-    padding:9px 15px;border-radius:999px;box-shadow:0 6px 18px rgba(245,196,81,.3);
-  }
-  .card{
-    background:linear-gradient(180deg,var(--panel),var(--bg2));
-    border:1px solid var(--line);border-radius:var(--radius);
-    padding:18px;margin-top:18px;animation:rise .6s both;
-  }
+  #installBtn{display:none;align-items:center;gap:7px;cursor:pointer;border:none;font-family:"DM Sans";font-weight:700;font-size:13.5px;color:#1a1304;background:linear-gradient(145deg,var(--gold),var(--gold-soft));padding:9px 15px;border-radius:999px;box-shadow:0 6px 18px rgba(245,196,81,.3)}
+  .ticker{margin-top:16px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:16px}
   .card h2{font-family:"Sora";font-size:16px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
   .card h2 .ic{font-size:18px}
   .lead{color:var(--muted);font-size:14.5px;line-height:1.6}
@@ -69,14 +44,17 @@
   .pill .lvl{width:11px;height:11px;border-radius:50%}
   .l-high{background:var(--bear)}.l-mid{background:var(--warn)}.l-low{background:var(--bull)}
   .pill small{color:var(--muted);display:block;font-size:11.5px}
-  .tabs{display:flex;gap:6px;margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px}
-  .tab{flex:1;border:none;cursor:pointer;font-family:"DM Sans";background:transparent;color:var(--muted);font-size:14.5px;font-weight:700;padding:11px 8px;border-radius:10px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .tabs{display:flex;gap:6px;margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px}
+  .tab{flex:1;border:none;cursor:pointer;font-family:"DM Sans";background:transparent;color:var(--muted);font-size:14px;font-weight:700;padding:11px 6px;border-radius:10px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
   .tab.active{background:linear-gradient(145deg,var(--gold),var(--gold-soft));color:#1a1304}
   .panel-view{display:none;animation:fade .4s both}
   .panel-view.active{display:block}
-  .widget-shell{margin-top:16px;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;padding:6px}
+  .filterbar{display:flex;gap:8px;margin-top:16px}
+  .fbtn{flex:1;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-family:"DM Sans";font-weight:700;font-size:13.5px;padding:10px;border-radius:12px;transition:.2s}
+  .fbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(245,196,81,.08)}
+  .widget-shell{margin-top:12px;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;padding:6px}
+  .widget-shell.hidden{display:none}
   .tradingview-widget-copyright{font-size:11px;color:var(--muted);text-align:center;padding:6px 0 2px}
-  .tradingview-widget-copyright a{color:var(--muted)}
   details.lex{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft);overflow:hidden}
   details.lex>summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between}
   details.lex>summary::-webkit-details-marker{display:none}
@@ -87,9 +65,37 @@
   .term .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
   .term .t .lvl{width:10px;height:10px;border-radius:50%}
   .term p{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:5px}
-  .note{margin-top:22px;font-size:12.5px;color:var(--muted);line-height:1.6;border-left:3px solid var(--gold-soft);padding:10px 14px;background:rgba(245,196,81,.05);border-radius:0 12px 12px 0}
+
+  /* actus FR */
+  .news-item{padding:14px 0;border-top:1px solid var(--line)}
+  .news-item:first-child{border-top:none}
+  .news-item a{color:var(--txt);text-decoration:none;font-weight:600;font-size:14.5px;line-height:1.5}
+  .news-item a:hover{color:var(--gold)}
+  .news-item .meta{color:var(--muted);font-size:12px;margin-top:5px}
+
+  /* analyse auto */
+  .ana-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .refreshbtn{cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--gold);font-family:"DM Sans";font-weight:700;font-size:13px;padding:9px 14px;border-radius:11px}
+  .summary{margin-top:14px;background:var(--panel-soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14px;line-height:1.55}
+  .summary b{color:var(--gold)}
+  .acard{background:var(--panel-soft);border:1px solid var(--line);border-radius:14px;padding:15px;margin-top:12px}
+  .acard .ah{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .acard .aname{font-family:"Sora";font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:8px}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-family:"Sora";font-weight:800;font-size:13px;padding:6px 12px;border-radius:999px;white-space:nowrap}
+  .b-bull{background:rgba(46,201,138,.15);color:var(--bull)}
+  .b-bear{background:rgba(255,93,108,.15);color:var(--bear)}
+  .b-neutral{background:rgba(255,174,68,.15);color:var(--warn)}
+  .areason{color:var(--txt);font-size:13.5px;line-height:1.55;margin-top:10px}
+  .aev{margin-top:10px}
+  .aev .row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:5px 0}
+  .aev .row .lvl{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+  .aev .row .hh{color:var(--gold);font-weight:700;flex:0 0 auto}
+  .aev .row .nm{color:var(--txt)}
+  .loading{text-align:center;color:var(--muted);font-size:14px;padding:24px 0}
+  .errbox{margin-top:14px;border:1px solid var(--bear);background:rgba(255,93,108,.08);color:var(--txt);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.6}
+
+  .note{margin-top:18px;font-size:12.5px;color:var(--muted);line-height:1.6;border-left:3px solid var(--gold-soft);padding:10px 14px;background:rgba(245,196,81,.05);border-radius:0 12px 12px 0}
   .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;opacity:.7}
-  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
@@ -99,23 +105,25 @@
   <header>
     <div class="brand">
       <div class="logo">◎</div>
-      <div>
-        <h1>Boussole Éco</h1>
-        <p>Ton radar économique du jour, expliqué simplement</p>
-      </div>
+      <div><h1>Boussole Éco</h1><p>Ton radar économique du jour, expliqué simplement</p></div>
     </div>
     <div class="toprow">
       <div class="today"><span class="dot"></span> Nous sommes le <b id="dateToday">…</b></div>
       <button id="installBtn">📲 Installer l'appli</button>
     </div>
+    <div class="ticker">
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {"symbols":[{"proName":"OANDA:XAUUSD","title":"Or"},{"proName":"TVC:DXY","title":"Dollar (DXY)"},{"proName":"FX:EURUSD","title":"EUR/USD"},{"proName":"FX:GBPJPY","title":"GBP/JPY"},{"proName":"XETR:DAX","title":"DAX 40"},{"proName":"BITSTAMP:BTCUSD","title":"Bitcoin"}],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"fr"}
+        </script>
+      </div>
+    </div>
   </header>
 
   <section class="card">
     <h2><span class="ic">🧭</span> Comment lire cette page</h2>
-    <p class="lead">
-      Chaque jour, des <b>chiffres économiques</b> sont publiés (emploi, inflation, décisions des banques centrales…).
-      Ils font bouger les marchés. Ici tu vois <b>quand</b> ils sortent et <b>à quel point</b> ils sont importants.
-    </p>
+    <p class="lead">En haut, les <b>cours en direct</b>. En dessous : le <b>calendrier</b>, les <b>actus en français</b>, et une <b>analyse automatique</b> du jour pour chaque actif.</p>
     <div class="legend">
       <div class="pill"><span class="lvl l-high"></span><div>Fort impact<small>À surveiller de près</small></div></div>
       <div class="pill"><span class="lvl l-mid"></span><div>Impact moyen<small>Peut bouger un peu</small></div></div>
@@ -125,90 +133,242 @@
 
   <div class="tabs">
     <button class="tab active" data-view="cal">📅 Calendrier</button>
-    <button class="tab" data-view="news">📰 Actualités</button>
+    <button class="tab" data-view="news">📰 Actus</button>
+    <button class="tab" data-view="ana">🎯 Analyse</button>
   </div>
 
+  <!-- CALENDRIER -->
   <div class="panel-view active" id="view-cal">
-    <div class="widget-shell">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
+    <div class="filterbar">
+      <button class="fbtn active" id="f-all">Tout afficher</button>
+      <button class="fbtn" id="f-high">🔴 Fort impact seulement</button>
+    </div>
+    <div class="widget-shell" id="cal-all">
+      <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-        {"colorTheme":"dark","isTransparent":true,"locale":"fr","countryFilter":"us,eu,fr,gb,de,jp,ca,ch","importanceFilter":"0,1","width":"100%","height":"640"}
+        {"colorTheme":"dark","isTransparent":true,"locale":"fr","importanceFilter":"0,1","width":"100%","height":"600"}
+        </script>
+      </div>
+    </div>
+    <div class="widget-shell hidden" id="cal-high">
+      <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+        {"colorTheme":"dark","isTransparent":true,"locale":"fr","importanceFilter":"1","width":"100%","height":"600"}
         </script>
       </div>
     </div>
     <details class="lex">
-      <summary>📖 Lexique : les événements les plus importants <span class="chev">▾</span></summary>
+      <summary>📖 Lexique : comprendre les termes en anglais <span class="chev">▾</span></summary>
       <div class="lex-body">
-        <div class="term"><div class="t"><span class="lvl l-high"></span> NFP (emploi US)</div><p>Nombre d'emplois créés aux États-Unis. Bon chiffre → dollar souvent plus fort. Sort le 1er vendredi du mois.</p></div>
-        <div class="term"><div class="t"><span class="lvl l-high"></span> CPI / Inflation</div><p>Mesure la hausse des prix. Inflation forte → la banque centrale peut monter les taux → dollar plus fort.</p></div>
-        <div class="term"><div class="t"><span class="lvl l-high"></span> FOMC / Taux directeur</div><p>Décision de la banque centrale US (la Fed) sur les taux. Énorme impact sur tous les marchés, surtout l'or.</p></div>
-        <div class="term"><div class="t"><span class="lvl l-mid"></span> PIB (GDP)</div><p>La richesse produite par un pays. Croissance forte = économie en bonne santé.</p></div>
-        <div class="term"><div class="t"><span class="lvl l-mid"></span> Taux de chômage</div><p>Part de gens sans emploi. Chômage bas = économie solide.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-high"></span> Nonfarm Payrolls (NFP)</div><p>Emplois créés aux USA. Bon chiffre → dollar plus fort → pression sur l'or. 1er vendredi du mois.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-high"></span> CPI (inflation)</div><p>Hausse des prix. Inflation forte → la Fed peut monter les taux → dollar plus fort.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-high"></span> Fed Rate / FOMC</div><p>Décision de taux US. Impact énorme, surtout sur l'or.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-mid"></span> GDP / PMI / Retail Sales</div><p>PIB / confiance des entreprises / ventes. En hausse = économie dynamique.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-low"></span> Forecast / Previous / Actual</div><p>Prévu / précédent / réel. Le marché bouge quand le <b>réel</b> diffère du <b>prévu</b>.</p></div>
       </div>
     </details>
   </div>
 
+  <!-- ACTUS FR -->
   <div class="panel-view" id="view-news">
-    <div class="widget-shell">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-        {"feedMode":"all_symbols","isTransparent":true,"displayMode":"regular","width":"100%","height":"640","colorTheme":"dark","locale":"fr"}
-        </script>
-      </div>
+    <div class="ana-head">
+      <p class="lead" style="margin:0">Actualités économiques en français</p>
+      <button class="refreshbtn" id="newsRefresh">↻ Actualiser</button>
     </div>
-    <p class="lead" style="margin-top:14px">
-      💡 <b>Astuce débutant :</b> ne lis pas tout. Cherche les mots <b>« Fed », « inflation », « emploi », « taux »</b> :
-      ce sont eux qui bougent l'or et le dollar.
-    </p>
+    <div class="card" id="newsBox"><div class="loading">Ouvre cet onglet pour charger les actus…</div></div>
+    <p class="lead" style="margin-top:6px;font-size:12.5px">Source : Le Monde — Économie</p>
   </div>
 
-  <div class="note">
-    ⚠️ <b>Important :</b> cette page est un outil d'information et d'apprentissage.
-    Ce n'est pas un conseil en investissement. Les marchés sont incertains et tu restes seul responsable de tes décisions.
+  <!-- ANALYSE AUTO -->
+  <div class="panel-view" id="view-ana">
+    <section class="card" style="margin-top:16px">
+      <h2><span class="ic">🎯</span> Analyse automatique du jour</h2>
+      <p class="lead">Pour chaque actif : un <b>biais probable</b> (haussier / baissier / neutre) et les <b>événements à surveiller</b>, calculés à partir du vrai calendrier économique.</p>
+      <div class="ana-head">
+        <span class="lead" id="anaDate" style="margin:0"></span>
+        <button class="refreshbtn" id="anaRefresh">↻ Actualiser</button>
+      </div>
+      <div id="anaResult"><div class="loading">Ouvre cet onglet pour lancer l'analyse…</div></div>
+    </section>
+    <div class="note">⚠️ <b>Rappel :</b> outil d'apprentissage, pas un conseil en investissement. Les biais sont des tendances probables basées sur le consensus du marché — ils ne se réalisent pas à tous les coups. Tu restes seul responsable de tes décisions.</div>
   </div>
 
-  <div class="foot">Boussole Éco · Phase 2 · données : TradingView</div>
+  <div class="note">⚠️ <b>Important :</b> page d'information et d'apprentissage. Ce n'est pas un conseil en investissement. Les marchés sont incertains.</div>
+  <div class="foot">Boussole Éco · cours & calendrier : TradingView · actus : Le Monde</div>
 </div>
 
 <script>
-  // Date du jour
-  const d = new Date();
-  document.getElementById('dateToday').textContent =
-    d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  // ---- Date ----
+  var now = new Date();
+  document.getElementById('dateToday').textContent = now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('anaDate').textContent = 'Aujourd\'hui : ' + now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
 
-  // Onglets
-  document.querySelectorAll('.tab').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('.panel-view').forEach(v=>v.classList.remove('active'));
+  // ---- Onglets ----
+  document.querySelectorAll('.tab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('.panel-view').forEach(function(v){v.classList.remove('active');});
       btn.classList.add('active');
-      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+      if(btn.dataset.view==='ana' && !anaLoaded){ runAnalysis(); }
+      if(btn.dataset.view==='news' && !newsLoaded){ loadNews(); }
     });
   });
 
-  // Service worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
-  }
+  // ---- Filtre importance ----
+  var fAll=document.getElementById('f-all'),fHigh=document.getElementById('f-high');
+  var calAll=document.getElementById('cal-all'),calHigh=document.getElementById('cal-high');
+  fAll.addEventListener('click',function(){fAll.classList.add('active');fHigh.classList.remove('active');calAll.classList.remove('hidden');calHigh.classList.add('hidden');});
+  fHigh.addEventListener('click',function(){fHigh.classList.add('active');fAll.classList.remove('active');calHigh.classList.remove('hidden');calAll.classList.add('hidden');});
 
-  // Bouton "Installer l'appli"
-  let deferredPrompt = null;
-  const installBtn = document.getElementById('installBtn');
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'inline-flex';
-  });
-  installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    installBtn.style.display = 'none';
-  });
-  window.addEventListener('appinstalled', () => { installBtn.style.display = 'none'; });
+  // ================= ACTUS FR =================
+  var newsLoaded=false;
+  function timeAgo(dateStr){
+    var t=new Date(dateStr).getTime(); if(isNaN(t)) return '';
+    var diff=Math.floor((Date.now()-t)/60000);
+    if(diff<60) return 'il y a '+diff+' min';
+    if(diff<1440) return 'il y a '+Math.floor(diff/60)+' h';
+    return 'il y a '+Math.floor(diff/1440)+' j';
+  }
+  function loadNews(){
+    var box=document.getElementById('newsBox');
+    box.innerHTML='<div class="loading">Chargement des actus…</div>';
+    var feed='https://www.lemonde.fr/economie/rss_full.xml';
+    var url='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12';
+    fetch(url).then(function(r){return r.json();}).then(function(data){
+      if(!data || data.status!=='ok' || !data.items || !data.items.length){ throw new Error('vide'); }
+      newsLoaded=true;
+      var html='';
+      data.items.slice(0,12).forEach(function(it){
+        html+='<div class="news-item"><a href="'+it.link+'" target="_blank" rel="noopener">'+it.title+'</a><div class="meta">'+timeAgo(it.pubDate)+'</div></div>';
+      });
+      box.innerHTML=html;
+    }).catch(function(){
+      box.innerHTML='<div class="errbox">Impossible de charger les actus en direct. ⚠️ Vérifie que tu ouvres l\'appli depuis ton adresse en ligne (github.io) et non depuis un fichier local, puis appuie sur « ↻ Actualiser ».</div>';
+    });
+  }
+  document.getElementById('newsRefresh').addEventListener('click',function(){newsLoaded=false;loadNews();});
+
+  // ================= ANALYSE AUTO =================
+  var anaLoaded=false;
+  var assetsMeta=[
+    {key:'gold',emoji:'🥇',name:'Or',ccy:['USD']},
+    {key:'dxy',emoji:'💵',name:'Dollar (DXY)',ccy:['USD']},
+    {key:'eur',emoji:'🇪🇺',name:'EUR/USD',ccy:['EUR','USD']},
+    {key:'gbpjpy',emoji:'💷',name:'GBP/JPY',ccy:['GBP','JPY']},
+    {key:'dax',emoji:'📊',name:'DAX',ccy:['EUR']},
+    {key:'btc',emoji:'₿',name:'Bitcoin',ccy:['USD']}
+  ];
+  function parseNum(s){
+    if(s===null||s===undefined||s==='') return null;
+    var t=String(s).replace(/,/g,'').trim();
+    var m=t.match(/-?\d+(\.\d+)?/); if(!m) return null;
+    var n=parseFloat(m[0]);
+    if(/k/i.test(t)) n*=1e3; if(/m/i.test(t)) n*=1e6; if(/b/i.test(t)) n*=1e9;
+    return n;
+  }
+  // polarité : +1 = un chiffre plus haut renforce la devise ; -1 = l'affaiblit
+  function polarity(title){
+    var s=title.toLowerCase();
+    if(/unemployment rate|jobless|claims/.test(s)) return -1;
+    if(/cpi|inflation|ppi|price index|pce/.test(s)) return 1;
+    if(/non-?farm|payroll|employment change|adp|job/.test(s)) return 1;
+    if(/gdp|gross domestic/.test(s)) return 1;
+    if(/pmi|ism|sentiment|confidence|zew|ifo|business climate/.test(s)) return 1;
+    if(/retail sales/.test(s)) return 1;
+    if(/rate|refinanc|cash rate|bank rate/.test(s)) return 1;
+    if(/trade balance|current account/.test(s)) return 1;
+    return 0;
+  }
+  function impactWeight(imp){ imp=(imp||'').toLowerCase(); if(imp==='high') return 3; if(imp==='medium') return 2; if(imp==='low') return 1; return 0; }
+  function frenchify(title){
+    var s=title;
+    s=s.replace(/Unemployment Rate/i,'Taux de chômage');
+    s=s.replace(/Non-?Farm.*?(Payrolls|Employment Change)/i,'Emploi US (NFP)');
+    s=s.replace(/CPI/i,'Inflation (CPI)');
+    s=s.replace(/Retail Sales/i,'Ventes au détail');
+    s=s.replace(/GDP/i,'PIB (GDP)');
+    s=s.replace(/Interest Rate Decision|Rate Decision/i,'Décision de taux');
+    s=s.replace(/Manufacturing PMI/i,'PMI manufacturier');
+    s=s.replace(/Services PMI/i,'PMI services');
+    return s;
+  }
+  function isToday(d){ var x=new Date(d); return x.getFullYear()===now.getFullYear()&&x.getMonth()===now.getMonth()&&x.getDate()===now.getDate(); }
+  function biasObj(score){
+    if(score>1.4) return {cls:'b-bull',arrow:'▲',label:'Haussier'};
+    if(score<-1.4) return {cls:'b-bear',arrow:'▼',label:'Baissier'};
+    return {cls:'b-neutral',arrow:'◆',label:'Neutre'};
+  }
+  function reasonText(key,b){
+    var R={
+      gold:{Haussier:"Dollar attendu plus faible → l'or est plutôt soutenu.",Baissier:"Dollar attendu plus fort → l'or est plutôt sous pression.",Neutre:"Pas de catalyseur clair → l'or suit sa tendance technique."},
+      dxy:{Haussier:"Les chiffres attendus soutiennent le dollar.",Baissier:"Les chiffres attendus pèsent sur le dollar.",Neutre:"Pas de direction claire pour le dollar aujourd'hui."},
+      eur:{Haussier:"Contexte plutôt favorable à l'euro face au dollar.",Baissier:"Contexte plutôt favorable au dollar face à l'euro.",Neutre:"Pas de direction claire sur l'EUR/USD."},
+      gbpjpy:{Haussier:"Contexte favorable à la livre / défavorable au yen → paire soutenue.",Baissier:"Contexte favorable au yen (refuge) → paire sous pression.",Neutre:"Pas de direction claire sur le GBP/JPY."},
+      dax:{Haussier:"Climat économique plutôt porteur pour les actions allemandes.",Baissier:"Climat économique plutôt pesant pour les actions.",Neutre:"Pas de catalyseur clair pour le DAX."},
+      btc:{Haussier:"Contexte de taux/dollar plutôt favorable au Bitcoin.",Baissier:"Contexte de taux/dollar plutôt défavorable au Bitcoin.",Neutre:"Peu de catalyseur macro : le Bitcoin suit sa propre dynamique."}
+    };
+    return R[key][b.label];
+  }
+  function assetScore(key,cs){
+    if(key==='dxy') return cs.USD;
+    if(key==='gold') return -cs.USD;
+    if(key==='eur') return cs.EUR-cs.USD;
+    if(key==='gbpjpy') return cs.GBP-cs.JPY;
+    if(key==='dax') return 0.6*cs.EUR;
+    if(key==='btc') return -0.4*cs.USD;
+    return 0;
+  }
+  function runAnalysis(){
+    var box=document.getElementById('anaResult');
+    box.innerHTML='<div class="loading">Analyse en cours… lecture du calendrier économique 📊</div>';
+    fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json').then(function(r){return r.json();}).then(function(events){
+      anaLoaded=true;
+      var todays=events.filter(function(e){return isToday(e.date);});
+      var cs={USD:0,EUR:0,GBP:0,JPY:0};
+      todays.forEach(function(e){
+        var p=polarity(e.title||''); if(!p) return;
+        var f=parseNum(e.forecast), prev=parseNum(e.previous);
+        if(f===null||prev===null) return;
+        var dir = f>prev?1:(f<prev?-1:0);
+        var contrib = dir*p*impactWeight(e.impact);
+        if(cs[e.country]!==undefined) cs[e.country]+=contrib;
+      });
+      var bigCount=todays.filter(function(e){return impactWeight(e.impact)>=2;}).length;
+      var summary;
+      if(todays.length===0){ summary='<b>Journée calme :</b> aucune annonce économique recensée aujourd\'hui. Les actifs suivent surtout leur tendance technique. Biais neutre par défaut.'; }
+      else { summary='<b>'+bigCount+' annonce(s) importante(s)</b> aujourd\'hui, sur '+todays.length+' au total. Voici le biais probable par actif, basé sur le consensus (prévu vs précédent).'; }
+      var html='<div class="summary">'+summary+'</div>';
+      assetsMeta.forEach(function(m){
+        var sc=assetScore(m.key,cs);
+        var b=biasObj(sc);
+        var rel=todays.filter(function(e){return m.ccy.indexOf(e.country)>=0 && impactWeight(e.impact)>= (m.key==='btc'?3:2);}).sort(function(a,b){return new Date(a.date)-new Date(b.date);}).slice(0,6);
+        var evHtml='';
+        if(rel.length){
+          rel.forEach(function(e){
+            var lvl=impactWeight(e.impact)>=3?'l-high':(impactWeight(e.impact)===2?'l-mid':'l-low');
+            var hh=new Date(e.date).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+            var val = (e.forecast? 'prévu '+e.forecast : '') + (e.previous? ' / préc. '+e.previous : '');
+            evHtml+='<div class="row"><span class="lvl '+lvl+'"></span><span class="hh">'+hh+'</span><span class="nm">'+frenchify(e.title)+(val?' — '+val:'')+'</span></div>';
+          });
+        } else {
+          evHtml='<div class="row"><span class="nm" style="color:var(--muted)">Aucune annonce majeure pour cet actif aujourd\'hui.</span></div>';
+        }
+        html+='<div class="acard"><div class="ah"><div class="aname">'+m.emoji+' '+m.name+'</div><span class="badge '+b.cls+'">'+b.arrow+' '+b.label+'</span></div><div class="areason">'+reasonText(m.key,b)+'</div><div class="aev">'+evHtml+'</div></div>';
+      });
+      box.innerHTML=html;
+    }).catch(function(){
+      box.innerHTML='<div class="errbox">Impossible de charger le calendrier en direct. ⚠️ L\'analyse automatique a besoin d\'Internet et fonctionne <b>uniquement depuis ton adresse en ligne</b> (arcangel31.github.io/boussole-eco/), pas depuis un fichier ouvert en local. Ouvre l\'appli en ligne puis appuie sur « ↻ Actualiser ».</div>';
+    });
+  }
+  document.getElementById('anaRefresh').addEventListener('click',function(){anaLoaded=false;runAnalysis();});
+
+  // ---- Service worker + install ----
+  if('serviceWorker' in navigator){ window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});}); }
+  var deferredPrompt=null, installBtn=document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;installBtn.style.display='inline-flex';});
+  installBtn.addEventListener('click',function(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;installBtn.style.display='none';});});
+  window.addEventListener('appinstalled',function(){installBtn.style.display='none';});
 </script>
 </body>
 </html>
