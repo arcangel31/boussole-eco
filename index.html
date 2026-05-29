@@ -230,22 +230,44 @@
     if(diff<1440) return 'il y a '+Math.floor(diff/60)+' h';
     return 'il y a '+Math.floor(diff/1440)+' j';
   }
+  function renderNews(items){
+    var html='';
+    items.slice(0,12).forEach(function(it){
+      html+='<div class="news-item"><a href="'+it.link+'" target="_blank" rel="noopener">'+it.title+'</a><div class="meta">'+timeAgo(it.pubDate)+'</div></div>';
+    });
+    document.getElementById('newsBox').innerHTML=html;
+  }
   function loadNews(){
     var box=document.getElementById('newsBox');
     box.innerHTML='<div class="loading">Chargement des actus…</div>';
     var feed='https://www.lemonde.fr/economie/rss_full.xml';
-    var url='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12';
-    fetch(url).then(function(r){return r.json();}).then(function(data){
-      if(!data || data.status!=='ok' || !data.items || !data.items.length){ throw new Error('vide'); }
-      newsLoaded=true;
-      var html='';
-      data.items.slice(0,12).forEach(function(it){
-        html+='<div class="news-item"><a href="'+it.link+'" target="_blank" rel="noopener">'+it.title+'</a><div class="meta">'+timeAgo(it.pubDate)+'</div></div>';
+    fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12')
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if(!data||data.status!=='ok'||!data.items||!data.items.length) throw new Error('vide');
+        newsLoaded=true; renderNews(data.items);
+      })
+      .catch(function(){
+        fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(feed))
+          .then(function(r){return r.text();})
+          .then(function(xml){
+            var doc=new DOMParser().parseFromString(xml,'text/xml');
+            var nodes=doc.querySelectorAll('item');
+            if(!nodes.length) throw new Error('vide');
+            var items=[];
+            nodes.forEach(function(n){
+              items.push({
+                title:(n.querySelector('title')?n.querySelector('title').textContent:'').trim(),
+                link:(n.querySelector('link')?n.querySelector('link').textContent:'#').trim(),
+                pubDate:(n.querySelector('pubDate')?n.querySelector('pubDate').textContent:'')
+              });
+            });
+            newsLoaded=true; renderNews(items);
+          })
+          .catch(function(){
+            box.innerHTML='<div class="errbox">Impossible de charger les actus pour le moment. Patiente quelques secondes puis appuie sur « ↻ Actualiser » (et ouvre l\'appli en ligne, pas en local).</div>';
+          });
       });
-      box.innerHTML=html;
-    }).catch(function(){
-      box.innerHTML='<div class="errbox">Impossible de charger les actus en direct. ⚠️ Vérifie que tu ouvres l\'appli depuis ton adresse en ligne (github.io) et non depuis un fichier local, puis appuie sur « ↻ Actualiser ».</div>';
-    });
   }
   document.getElementById('newsRefresh').addEventListener('click',function(){newsLoaded=false;loadNews();});
 
@@ -319,10 +341,27 @@
     if(key==='btc') return -0.4*cs.USD;
     return 0;
   }
+  function fetchCalendarRaw(){
+    var target='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+    var proxies=[
+      'https://api.allorigins.win/raw?url='+encodeURIComponent(target),
+      'https://corsproxy.io/?url='+encodeURIComponent(target),
+      'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(target)
+    ];
+    function attempt(i){
+      if(i>=proxies.length) return Promise.reject(new Error('all proxies failed'));
+      return fetch(proxies[i]).then(function(r){return r.text();}).then(function(t){
+        var data=JSON.parse(t);
+        if(!Array.isArray(data)) throw new Error('not array');
+        return data;
+      }).catch(function(){ return attempt(i+1); });
+    }
+    return attempt(0);
+  }
   function runAnalysis(){
     var box=document.getElementById('anaResult');
     box.innerHTML='<div class="loading">Analyse en cours… lecture du calendrier économique 📊</div>';
-    fetch('https://nfs.faireconomy.media/ff_calendar_thisweek.json').then(function(r){return r.json();}).then(function(events){
+    fetchCalendarRaw().then(function(events){
       anaLoaded=true;
       var todays=events.filter(function(e){return isToday(e.date);});
       var cs={USD:0,EUR:0,GBP:0,JPY:0};
@@ -358,7 +397,7 @@
       });
       box.innerHTML=html;
     }).catch(function(){
-      box.innerHTML='<div class="errbox">Impossible de charger le calendrier en direct. ⚠️ L\'analyse automatique a besoin d\'Internet et fonctionne <b>uniquement depuis ton adresse en ligne</b> (arcangel31.github.io/boussole-eco/), pas depuis un fichier ouvert en local. Ouvre l\'appli en ligne puis appuie sur « ↻ Actualiser ».</div>';
+      box.innerHTML='<div class="errbox">Le service de données est momentanément indisponible (limite atteinte ou intermédiaire occupé). Patiente quelques secondes puis appuie sur « ↻ Actualiser ». Pense aussi à ouvrir l\'appli en ligne (github.io), pas en local.</div>';
     });
   }
   document.getElementById('anaRefresh').addEventListener('click',function(){anaLoaded=false;runAnalysis();});
