@@ -176,7 +176,7 @@
       <button class="refreshbtn" id="newsRefresh">↻ Actualiser</button>
     </div>
     <div class="card" id="newsBox"><div class="loading">Ouvre cet onglet pour charger les actus…</div></div>
-    <p class="lead" style="margin-top:6px;font-size:12.5px">Source : Le Monde — Économie</p>
+    <p class="lead" style="margin-top:6px;font-size:12.5px">Source : ABC Bourse</p>
   </div>
 
   <!-- ANALYSE AUTO -->
@@ -194,7 +194,7 @@
   </div>
 
   <div class="note">⚠️ <b>Important :</b> page d'information et d'apprentissage. Ce n'est pas un conseil en investissement. Les marchés sont incertains.</div>
-  <div class="foot">Boussole Éco · cours & calendrier : TradingView · actus : Le Monde</div>
+  <div class="foot">Boussole Éco · cours & calendrier : TradingView · actus : ABC Bourse</div>
 </div>
 
 <script>
@@ -237,37 +237,40 @@
     });
     document.getElementById('newsBox').innerHTML=html;
   }
+  function fetchText(target){
+    var proxies=[
+      'https://api.allorigins.win/raw?url='+encodeURIComponent(target),
+      'https://corsproxy.io/?url='+encodeURIComponent(target),
+      'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(target)
+    ];
+    function attempt(i){
+      if(i>=proxies.length) return Promise.reject(new Error('all proxies failed'));
+      return fetch(proxies[i]).then(function(r){return r.text();}).then(function(t){
+        if(!t||t.length<50) throw new Error('empty'); return t;
+      }).catch(function(){ return attempt(i+1); });
+    }
+    return attempt(0);
+  }
   function loadNews(){
     var box=document.getElementById('newsBox');
     box.innerHTML='<div class="loading">Chargement des actus…</div>';
-    var feed='https://www.lemonde.fr/economie/rss_full.xml';
-    fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(feed)+'&count=12')
-      .then(function(r){return r.json();})
-      .then(function(data){
-        if(!data||data.status!=='ok'||!data.items||!data.items.length) throw new Error('vide');
-        newsLoaded=true; renderNews(data.items);
-      })
-      .catch(function(){
-        fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(feed))
-          .then(function(r){return r.text();})
-          .then(function(xml){
-            var doc=new DOMParser().parseFromString(xml,'text/xml');
-            var nodes=doc.querySelectorAll('item');
-            if(!nodes.length) throw new Error('vide');
-            var items=[];
-            nodes.forEach(function(n){
-              items.push({
-                title:(n.querySelector('title')?n.querySelector('title').textContent:'').trim(),
-                link:(n.querySelector('link')?n.querySelector('link').textContent:'#').trim(),
-                pubDate:(n.querySelector('pubDate')?n.querySelector('pubDate').textContent:'')
-              });
-            });
-            newsLoaded=true; renderNews(items);
-          })
-          .catch(function(){
-            box.innerHTML='<div class="errbox">Impossible de charger les actus pour le moment. Patiente quelques secondes puis appuie sur « ↻ Actualiser » (et ouvre l\'appli en ligne, pas en local).</div>';
-          });
+    var feed='https://www.abcbourse.com/rss/displaynewsrss';
+    fetchText(feed).then(function(xml){
+      var doc=new DOMParser().parseFromString(xml,'text/xml');
+      var nodes=doc.querySelectorAll('item');
+      if(!nodes.length) throw new Error('no items');
+      var items=[];
+      nodes.forEach(function(n){
+        items.push({
+          title:(n.querySelector('title')?n.querySelector('title').textContent:'').trim(),
+          link:(n.querySelector('link')?n.querySelector('link').textContent:'#').trim(),
+          pubDate:(n.querySelector('pubDate')?n.querySelector('pubDate').textContent:'')
+        });
       });
+      newsLoaded=true; renderNews(items);
+    }).catch(function(){
+      box.innerHTML='<div class="errbox">Impossible de charger les actus pour le moment. Patiente quelques secondes puis appuie sur « ↻ Actualiser ».</div>';
+    });
   }
   document.getElementById('newsRefresh').addEventListener('click',function(){newsLoaded=false;loadNews();});
 
