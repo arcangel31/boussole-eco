@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Boussole Éco — ton radar économique</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#0a0e17" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Boussole" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0e17;--bg2:#0d1320;--panel:#141b2d;--panel-soft:#1a2236;--line:#26304a;
+    --gold:#f5c451;--gold-soft:#e8b339;--bull:#2ec98a;--bear:#ff5d6c;--warn:#ffae44;
+    --txt:#e8edf5;--muted:#8a94a8;--radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font-family:"DM Sans",sans-serif}
+  body{
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(245,196,81,.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 10%, rgba(46,201,138,.06), transparent 55%),
+      var(--bg);
+    min-height:100vh;padding:0 0 60px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:22px 16px}
+  header{padding-top:max(22px,env(safe-area-inset-top))}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:46px;height:46px;border-radius:14px;flex:0 0 auto;
+    background:linear-gradient(145deg,var(--gold),var(--gold-soft));
+    display:grid;place-items:center;color:#1a1304;font-size:24px;
+    box-shadow:0 8px 24px rgba(245,196,81,.28);
+  }
+  .brand h1{font-family:"Sora";font-weight:800;font-size:23px;letter-spacing:-.3px;line-height:1}
+  .brand p{color:var(--muted);font-size:13.5px;margin-top:4px}
+  .toprow{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .today{
+    display:inline-flex;align-items:center;gap:8px;background:var(--panel);
+    border:1px solid var(--line);padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--muted);
+  }
+  .today b{color:var(--gold);text-transform:capitalize}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--bull);box-shadow:0 0 0 4px rgba(46,201,138,.18)}
+  #installBtn{
+    display:none;align-items:center;gap:7px;cursor:pointer;border:none;
+    font-family:"DM Sans";font-weight:700;font-size:13.5px;color:#1a1304;
+    background:linear-gradient(145deg,var(--gold),var(--gold-soft));
+    padding:9px 15px;border-radius:999px;box-shadow:0 6px 18px rgba(245,196,81,.3);
+  }
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;margin-top:18px;animation:rise .6s both;
+  }
+  .card h2{font-family:"Sora";font-size:16px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .card h2 .ic{font-size:18px}
+  .lead{color:var(--muted);font-size:14.5px;line-height:1.6}
+  .lead b{color:var(--txt)}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .pill{display:flex;align-items:center;gap:8px;font-size:13px;background:var(--panel-soft);border:1px solid var(--line);padding:8px 12px;border-radius:12px;flex:1 1 auto}
+  .pill .lvl{width:11px;height:11px;border-radius:50%}
+  .l-high{background:var(--bear)}.l-mid{background:var(--warn)}.l-low{background:var(--bull)}
+  .pill small{color:var(--muted);display:block;font-size:11.5px}
+  .tabs{display:flex;gap:6px;margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px}
+  .tab{flex:1;border:none;cursor:pointer;font-family:"DM Sans";background:transparent;color:var(--muted);font-size:14.5px;font-weight:700;padding:11px 8px;border-radius:10px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .tab.active{background:linear-gradient(145deg,var(--gold),var(--gold-soft));color:#1a1304}
+  .panel-view{display:none;animation:fade .4s both}
+  .panel-view.active{display:block}
+  .widget-shell{margin-top:16px;background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;padding:6px}
+  .tradingview-widget-copyright{font-size:11px;color:var(--muted);text-align:center;padding:6px 0 2px}
+  .tradingview-widget-copyright a{color:var(--muted)}
+  details.lex{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel-soft);overflow:hidden}
+  details.lex>summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700;font-size:14.5px;display:flex;align-items:center;justify-content:space-between}
+  details.lex>summary::-webkit-details-marker{display:none}
+  details.lex>summary .chev{transition:.25s;color:var(--gold)}
+  details.lex[open]>summary .chev{transform:rotate(180deg)}
+  .lex-body{padding:0 16px 14px}
+  .term{padding:13px 0;border-top:1px solid var(--line)}
+  .term .t{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .term .t .lvl{width:10px;height:10px;border-radius:50%}
+  .term p{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:5px}
+  .note{margin-top:22px;font-size:12.5px;color:var(--muted);line-height:1.6;border-left:3px solid var(--gold-soft);padding:10px 14px;background:rgba(245,196,81,.05);border-radius:0 12px 12px 0}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:26px;opacity:.7}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">◎</div>
+      <div>
+        <h1>Boussole Éco</h1>
+        <p>Ton radar économique du jour, expliqué simplement</p>
+      </div>
+    </div>
+    <div class="toprow">
+      <div class="today"><span class="dot"></span> Nous sommes le <b id="dateToday">…</b></div>
+      <button id="installBtn">📲 Installer l'appli</button>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2><span class="ic">🧭</span> Comment lire cette page</h2>
+    <p class="lead">
+      Chaque jour, des <b>chiffres économiques</b> sont publiés (emploi, inflation, décisions des banques centrales…).
+      Ils font bouger les marchés. Ici tu vois <b>quand</b> ils sortent et <b>à quel point</b> ils sont importants.
+    </p>
+    <div class="legend">
+      <div class="pill"><span class="lvl l-high"></span><div>Fort impact<small>À surveiller de près</small></div></div>
+      <div class="pill"><span class="lvl l-mid"></span><div>Impact moyen<small>Peut bouger un peu</small></div></div>
+      <div class="pill"><span class="lvl l-low"></span><div>Faible impact<small>Souvent calme</small></div></div>
+    </div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" data-view="cal">📅 Calendrier</button>
+    <button class="tab" data-view="news">📰 Actualités</button>
+  </div>
+
+  <div class="panel-view active" id="view-cal">
+    <div class="widget-shell">
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+        {"colorTheme":"dark","isTransparent":true,"locale":"fr","countryFilter":"us,eu,fr,gb,de,jp,ca,ch","importanceFilter":"0,1","width":"100%","height":"640"}
+        </script>
+      </div>
+    </div>
+    <details class="lex">
+      <summary>📖 Lexique : les événements les plus importants <span class="chev">▾</span></summary>
+      <div class="lex-body">
+        <div class="term"><div class="t"><span class="lvl l-high"></span> NFP (emploi US)</div><p>Nombre d'emplois créés aux États-Unis. Bon chiffre → dollar souvent plus fort. Sort le 1er vendredi du mois.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-high"></span> CPI / Inflation</div><p>Mesure la hausse des prix. Inflation forte → la banque centrale peut monter les taux → dollar plus fort.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-high"></span> FOMC / Taux directeur</div><p>Décision de la banque centrale US (la Fed) sur les taux. Énorme impact sur tous les marchés, surtout l'or.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-mid"></span> PIB (GDP)</div><p>La richesse produite par un pays. Croissance forte = économie en bonne santé.</p></div>
+        <div class="term"><div class="t"><span class="lvl l-mid"></span> Taux de chômage</div><p>Part de gens sans emploi. Chômage bas = économie solide.</p></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel-view" id="view-news">
+    <div class="widget-shell">
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+        {"feedMode":"all_symbols","isTransparent":true,"displayMode":"regular","width":"100%","height":"640","colorTheme":"dark","locale":"fr"}
+        </script>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:14px">
+      💡 <b>Astuce débutant :</b> ne lis pas tout. Cherche les mots <b>« Fed », « inflation », « emploi », « taux »</b> :
+      ce sont eux qui bougent l'or et le dollar.
+    </p>
+  </div>
+
+  <div class="note">
+    ⚠️ <b>Important :</b> cette page est un outil d'information et d'apprentissage.
+    Ce n'est pas un conseil en investissement. Les marchés sont incertains et tu restes seul responsable de tes décisions.
+  </div>
+
+  <div class="foot">Boussole Éco · Phase 2 · données : TradingView</div>
+</div>
+
+<script>
+  // Date du jour
+  const d = new Date();
+  document.getElementById('dateToday').textContent =
+    d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Onglets
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel-view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    });
+  });
+
+  // Service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  }
+
+  // Bouton "Installer l'appli"
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'inline-flex';
+  });
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+  window.addEventListener('appinstalled', () => { installBtn.style.display = 'none'; });
+</script>
+</body>
+</html>
