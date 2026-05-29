@@ -1,36 +1,38 @@
-// Service Worker — Boussole Éco
-// Rôle : rendre l'app installable + charger vite la coquille de l'app.
-// Les données (calendrier / actus) viennent toujours du réseau (TradingView).
+// Service Worker — Boussole Éco (v2)
+// "Réseau d'abord" pour la page : on récupère toujours la dernière version en ligne.
+// Le cache ne sert que de secours quand il n'y a pas de connexion.
 
-const CACHE = 'boussole-v1';
-const SHELL = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
+const CACHE = 'boussole-v2';
+const SHELL = ['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 
-// Installation : on met en cache la coquille de l'app
-self.addEventListener('install', (e) => {
+self.addEventListener('install', function(e){
+  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(SHELL);}).then(function(){return self.skipWaiting();}));
+});
+
+self.addEventListener('activate', function(e){
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.keys().then(function(keys){
+      return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));
+    }).then(function(){return self.clients.claim();})
   );
 });
 
-// Activation : on nettoie les anciens caches
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
-
-// Récupération : coquille = cache d'abord, le reste = réseau d'abord
-self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request).catch(() => cached))
-  );
+self.addEventListener('fetch', function(e){
+  if(e.request.method!=='GET') return;
+  var req=e.request;
+  // La page elle-même : réseau d'abord (toujours la dernière version)
+  if(req.mode==='navigate' || req.destination==='document'){
+    e.respondWith(
+      fetch(req).then(function(res){
+        var copy=res.clone();
+        caches.open(CACHE).then(function(c){c.put('./index.html', copy);});
+        return res;
+      }).catch(function(){
+        return caches.match('./index.html').then(function(m){return m || caches.match('./');});
+      })
+    );
+    return;
+  }
+  // Le reste (icônes, manifest) : cache d'abord
+  e.respondWith(caches.match(req).then(function(cached){return cached || fetch(req);}));
 });
