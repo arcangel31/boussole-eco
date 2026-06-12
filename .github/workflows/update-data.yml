@@ -1,0 +1,27 @@
+name: Mise a jour des donnees
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Telecharger calendrier et actus
+        run: |
+          mkdir -p data
+          curl -s -A "Mozilla/5.0" "https://nfs.faireconomy.media/ff_calendar_thisweek.json" -o data/calendar.json
+          curl -s -A "Mozilla/5.0" "https://www.abcbourse.com/rss/displaynewsrss" -o data/news.xml
+      - name: Commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/calendar.json data/news.xml
+          git commit -m "Mise a jour des donnees" || echo "rien a committer"
+          git push
