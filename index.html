@@ -237,40 +237,34 @@
     });
     document.getElementById('newsBox').innerHTML=html;
   }
-  function fetchText(target){
-    var proxies=[
-      'https://api.allorigins.win/raw?url='+encodeURIComponent(target),
-      'https://corsproxy.io/?url='+encodeURIComponent(target),
-      'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(target)
-    ];
-    function attempt(i){
-      if(i>=proxies.length) return Promise.reject(new Error('all proxies failed'));
-      return fetch(proxies[i]).then(function(r){return r.text();}).then(function(t){
-        if(!t||t.length<50) throw new Error('empty'); return t;
-      }).catch(function(){ return attempt(i+1); });
-    }
-    return attempt(0);
-  }
   function loadNews(){
     var box=document.getElementById('newsBox');
     box.innerHTML='<div class="loading">Chargement des actus…</div>';
     var feed='https://www.abcbourse.com/rss/displaynewsrss';
-    fetchText(feed).then(function(xml){
-      var doc=new DOMParser().parseFromString(xml,'text/xml');
-      var nodes=doc.querySelectorAll('item');
-      if(!nodes.length) throw new Error('no items');
-      var items=[];
-      nodes.forEach(function(n){
-        items.push({
-          title:(n.querySelector('title')?n.querySelector('title').textContent:'').trim(),
-          link:(n.querySelector('link')?n.querySelector('link').textContent:'#').trim(),
-          pubDate:(n.querySelector('pubDate')?n.querySelector('pubDate').textContent:'')
+    var sources=[
+      './data/news.xml',
+      'https://api.allorigins.win/raw?url='+encodeURIComponent(feed),
+      'https://corsproxy.io/?url='+encodeURIComponent(feed),
+      'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(feed)
+    ];
+    function attempt(i){
+      if(i>=sources.length){ box.innerHTML='<div class="errbox">Impossible de charger les actus pour le moment. Réessaie plus tard avec « ↻ Actualiser ».</div>'; return; }
+      fetch(sources[i]).then(function(r){if(!r.ok) throw new Error('http'); return r.text();}).then(function(xml){
+        var doc=new DOMParser().parseFromString(xml,'text/xml');
+        var nodes=doc.querySelectorAll('item');
+        if(!nodes.length) throw new Error('no items');
+        var items=[];
+        nodes.forEach(function(n){
+          items.push({
+            title:(n.querySelector('title')?n.querySelector('title').textContent:'').trim(),
+            link:(n.querySelector('link')?n.querySelector('link').textContent:'#').trim(),
+            pubDate:(n.querySelector('pubDate')?n.querySelector('pubDate').textContent:'')
+          });
         });
-      });
-      newsLoaded=true; renderNews(items);
-    }).catch(function(){
-      box.innerHTML='<div class="errbox">Impossible de charger les actus pour le moment. Patiente quelques secondes puis appuie sur « ↻ Actualiser ».</div>';
-    });
+        newsLoaded=true; renderNews(items);
+      }).catch(function(){ attempt(i+1); });
+    }
+    attempt(0);
   }
   document.getElementById('newsRefresh').addEventListener('click',function(){newsLoaded=false;loadNews();});
 
@@ -346,16 +340,17 @@
   }
   function fetchCalendarRaw(){
     var target='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-    var proxies=[
+    var sources=[
+      './data/calendar.json',
       'https://api.allorigins.win/raw?url='+encodeURIComponent(target),
       'https://corsproxy.io/?url='+encodeURIComponent(target),
       'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(target)
     ];
     function attempt(i){
-      if(i>=proxies.length) return Promise.reject(new Error('all proxies failed'));
-      return fetch(proxies[i]).then(function(r){return r.text();}).then(function(t){
+      if(i>=sources.length) return Promise.reject(new Error('all sources failed'));
+      return fetch(sources[i]).then(function(r){if(!r.ok) throw new Error('http'); return r.text();}).then(function(t){
         var data=JSON.parse(t);
-        if(!Array.isArray(data)) throw new Error('not array');
+        if(!Array.isArray(data)||!data.length) throw new Error('invalid');
         return data;
       }).catch(function(){ return attempt(i+1); });
     }
